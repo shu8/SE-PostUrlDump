@@ -8,6 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
   </head>
   <body>
     <section class="page-header">
@@ -35,10 +36,33 @@
 
 <p>Copy and paste the thing between <code>access_token=</code> and <code>&amp;</code>, ie. <code>asda89223***32nsd8())</code>.</p>
 
-<p>Access token:</p>
+<p>Access token: <input type='text' id='accessToken'></p>
 
-<p>Account ID:</p>
+<p>Network ID: <input id='networkId' type='text' placeholder='Network ID'><br>
+<input type='button' id='go' value='Go'></p>
+<div id='posts'></div>
 
+<script>
+  var accounts = {};
+
+  $('#go').click(function () {
+      $.getJSON("http://api.stackexchange.com/2.2/users/" + $('#networkId').val() + "/associated", function (j) {
+          for (var i = 0; i < j.items.length; i++) {
+              accounts[j.items[i]['site_url']] = j.items[i]['user_id'];
+          }
+          $.each(accounts, function (k, v) {
+              $.getJSON("https://api.stackexchange.com/2.2/users/" + v + "/posts?filter=!0S2A5ipm(pczxWJLGNzYzyy4l&key=c8aSGAR0rp5RUK)dVriyCA((&access_token="+$('#accessToken').val()+"&site=" + k.replace(/http.?:\/\//, ''), function (j2) {
+                  for (var x = 0; x < j2.items.length; x++) {
+                      $('#posts').append(j2.items[x]['score'] + ' - <a href="' + j2.items[x]['link'] + '">' + j2.items[x]['title'] + '</a><br>');
+                  }
+              });
+          });
+      });
+  });
+  
+  
+  
+</script>
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/shu8/SE-PostUrlDump">SE-Post-URL-Dump</a> is maintained by <a href="https://github.com/shu8">shu8</a>.</span>
 
